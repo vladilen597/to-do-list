@@ -24,10 +24,10 @@ class Header extends Component {
 
   render() {
     return (
-      <div className="header">
+      <header className="header">
         <h1>ToDo List</h1>
-        <div className="date">{this.state.date}</div>
-      </div>
+        <time className="date">{this.state.date}</time>
+      </header>
     );
   }
 }
