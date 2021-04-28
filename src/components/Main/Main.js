@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ToDoInput from "./ToDoInput/ToDoInput";
 import ToDoList from "./ToDoList/ToDoList";
+import PropTypes from "prop-types";
 import "./Main.css";
 
 class Main extends Component {
@@ -32,14 +33,28 @@ class Main extends Component {
   }
 
   updateMain = (data) => {
-    let toPush = this.state.array.concat({
+    let toPush = {
       id: this.counter,
       name: data,
       time: new Date().toLocaleString(),
       complete: false,
-    });
-    this.setState({ array: toPush });
+    };
+    localStorage.setItem(localStorage.length, JSON.stringify(toPush));
+    this.setState({ array: [toPush, ...this.state.array] });
     this.counter++;
+  };
+
+  deleteNote = (id) => {
+    console.log(this.state.array);
+    let tempArray = [];
+    this.state.array.filter((item) => {
+      if (item.id != id) {
+        tempArray.push(item);
+      }
+    });
+    this.setState({
+      array: tempArray,
+    });
   };
 
   toggleComplete = (id) => {
@@ -57,6 +72,14 @@ class Main extends Component {
     });
   };
 
+  componentDidMount() {
+    let toPush = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      toPush.push(localStorage.getItem(i));
+    }
+    this.setState({ array: toPush });
+  }
+
   render() {
     return (
       <main className="todo-main">
@@ -64,10 +87,15 @@ class Main extends Component {
         <ToDoList
           array={this.state.array}
           toggleComplete={this.toggleComplete}
+          deleteNote={this.deleteNote}
         />
       </main>
     );
   }
 }
+
+Main.propTypes = {
+  array: PropTypes.array,
+};
 
 export default Main;

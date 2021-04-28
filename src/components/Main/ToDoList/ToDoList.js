@@ -6,12 +6,13 @@ import "./ToDoList.css";
 export class ToDoList extends Component {
   render() {
     return (
-      <section>
+      <ul className="todo-list">
         <ToDoItem
           array={this.props.array}
           toggleComplete={this.props.toggleComplete}
+          deleteNote={this.props.deleteNote}
         />
-      </section>
+      </ul>
     );
   }
 }
@@ -19,6 +20,7 @@ export class ToDoList extends Component {
 ToDoList.propTypes = {
   array: PropTypes.array,
   toggleComplete: PropTypes.func,
+  deleteNote: PropTypes.func,
 };
 
 export default ToDoList;
