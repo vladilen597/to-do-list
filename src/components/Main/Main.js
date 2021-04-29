@@ -7,41 +7,21 @@ import "./Main.css";
 class Main extends Component {
   constructor(props) {
     super(props);
-    this.counter = 4;
+    this.counter = localStorage.length;
     this.state = {
-      array: [
-        {
-          id: 1,
-          name: "Купить молоко",
-          time: "4/26/2021, 6:23:12 AM",
-          complete: false,
-        },
-        {
-          id: 2,
-          name: "Купить хлеб",
-          time: "4/27/2021, 12:23:12 PM",
-          complete: false,
-        },
-        {
-          id: 3,
-          name: "Закончить стажировку",
-          time: "3/12/2021, 3:45:27 PM",
-          complete: false,
-        },
-      ],
+      array: [],
     };
   }
 
   updateMain = (data) => {
     let toPush = {
-      id: this.counter,
+      id: localStorage.length,
       name: data,
       time: new Date().toLocaleString(),
       complete: false,
     };
     localStorage.setItem(localStorage.length, JSON.stringify(toPush));
-    this.setState({ array: [toPush, ...this.state.array] });
-    this.counter++;
+    this.setState({ array: [...this.state.array, toPush] });
   };
 
   deleteNote = (id) => {
@@ -52,6 +32,11 @@ class Main extends Component {
         tempArray.push(item);
       }
     });
+    localStorage.clear();
+    for (let i = 0; i < tempArray.length; i++) {
+      tempArray[i].id = i;
+      localStorage.setItem(i, JSON.stringify(tempArray[i]));
+    }
     this.setState({
       array: tempArray,
     });
@@ -61,9 +46,11 @@ class Main extends Component {
     this.setState({
       array: this.state.array.map((item) => {
         if (item.id === id) {
+          item.complete = !item.complete;
+          localStorage.setItem(id, JSON.stringify(item));
           return {
             ...item,
-            complete: !item.complete,
+            complete: item.complete,
           };
         } else {
           return item;
@@ -75,9 +62,11 @@ class Main extends Component {
   componentDidMount() {
     let toPush = [];
     for (let i = 0; i < localStorage.length; i++) {
-      toPush.push(localStorage.getItem(i));
+      toPush.push(JSON.parse(localStorage.getItem(i)));
     }
-    this.setState({ array: toPush });
+    this.setState({
+      array: toPush,
+    });
   }
 
   render() {

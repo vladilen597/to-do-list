@@ -8,10 +8,18 @@ class ToDoInput extends Component {
     super(props);
     this.state = { value: "" };
     this.handleChange = this.handleChange.bind(this);
+    this.handlePress = this.handlePress.bind(this);
   }
 
   handleChange(event) {
     this.setState({ value: event.target.value });
+  }
+
+  handlePress(event) {
+    if (event.key == "Enter") {
+      this.props.updateMain(event.target.value);
+      event.target.value = "";
+    }
   }
 
   render() {
@@ -22,6 +30,7 @@ class ToDoInput extends Component {
           type="text"
           className="todo-input"
           onChange={this.handleChange}
+          onKeyUp={this.handlePress}
         />
         <ToDoButton
           updateMain={() => {
